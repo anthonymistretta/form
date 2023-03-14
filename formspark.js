@@ -5,17 +5,20 @@ $('form[action^="https://submit-form.com"]').each(function (i, el) {
   var submitTarget = form.find("[type=submit]");
   var submitButton = form.find("a");
   var buttonClass = "button-loading";
-  var botpoisonPublicKey = form.attr("botpoison");
-  var redirectUrl = form.attr("redirect");
-  // Requred Inputs
   var requiredFields = form.find($('input,textarea,select')).filter('[required]:visible')
-  // Inputs used in email subject line
-  var inputFirstName = form.find("[name='first-name']");
-  var inputLastName = form.find("[name='last-name']");
-  // Optional Input Fields
+  // Required Attributes
+  var botpoisonPublicKey = form.attr("ec-botpoison");
+  // Optional Attributes
+  var redirectUrl = form.attr("ec-redirect");
+  var emailFrom = form.attr("ec-email-from");
+  var subjectLine = form.attr("ec-email-subject");
+  var inputName1 = form.attr("ec-subject-var1");
+  var inputName2 = form.attr("ec-subject-var2");
+  // Optional Inputs
+  var inputEmailFrom = form.find("[name='_email.from']");
   var inputSubject = form.find("[name='_email.subject']");
-  var pageUrl = form.find("#page-url-input");
-  var formName = form.find("#form-name-input");
+  var inputPageUrl = form.find("[name='Page URL']");
+  var inputFormName = form.find("[name='Form Name']");
 
   submitButton.click(function(){
     requiredFields.each(function() {
@@ -25,15 +28,25 @@ $('form[action^="https://submit-form.com"]').each(function (i, el) {
         submitTarget.attr("disabled", false);
       } else {
         submitButton.addClass(buttonClass);
-        var subject = "New Website Form Submission:  " + inputFirstName.val() + " " + inputLastName.val();
-        inputSubject.val(subject);
-        pageUrl.val(window.location);
-        formName.val(form.attr("data-name")); 
-        function disable() {
+        inputPageUrl.val(window.location);
+        inputFormName.val(form.attr("data-name")); 
+        // Set subject line
+        if (inputName2) {
+          var subjectVar1 = form.find("[data-name='" + inputName1 + "']").val();
+          var subjectVar2 = form.find("[data-name='" + inputName2 + "']").val();
+          inputSubject.val(subjectLine + " " + subjectVar1 + " " + subjectVar2);
+        } else if (inputName1) {
+          var subjectVar1 = form.find("[data-name='" + inputName1 + "']").val();
+          inputSubject.val(subjectLine + " " + subjectVar1 );
+        } else {
+          inputSubject.val(subjectLine);
+        }
+        // Set email from
+        inputEmailFrom.val(emailFrom);
+        setTimeout(function () {
           submitButton.attr("disabled", true);
           submitTarget.attr("disabled", true);
-        }
-        setTimeout(disable, 1000);
+        }, 1000);
       }
     });
   });
@@ -58,11 +71,11 @@ $('form[action^="https://submit-form.com"]').each(function (i, el) {
           success: function () {
             var parent = $(form.parent());
             parent.children("form").css("display", "none");
-            if ( redirectUrl == undefined || redirectUrl == false ) {
-              parent.children(".w-form-done").css("display", "block");
+            if (redirectUrl) {
+              window.location.href = redirectUrl;
               submitButton.removeClass(buttonClass);
             } else {
-              window.location.href = redirectUrl;
+              parent.children(".w-form-done").css("display", "block");
               submitButton.removeClass(buttonClass);
             }
           },
