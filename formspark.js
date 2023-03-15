@@ -2,8 +2,9 @@
 $('form[action^="https://submit-form.com"]').each(function (i, el) {
   // Basic Setup
   var form = $(el);
-  var submitTarget = form.find("[type=submit]");
-  var submitButton = form.find("a");
+  var submitButtonTarget = form.find("[type=submit]");
+  var submitButtonTrigger = form.find("a");
+  submitButtonTarget.css("display", "none");
   var buttonClass = "button-loading";
   var requiredFields = form.find($('input,textarea,select')).filter('[required]:visible')
   // Required Attributes
@@ -19,18 +20,26 @@ $('form[action^="https://submit-form.com"]').each(function (i, el) {
   var inputSubject = form.find("[name='_email.subject']");
   var inputPageUrl = form.find("[name='Page URL']");
   var inputFormName = form.find("[name='Form Name']");
-
-  submitButton.click(function(){
+  function loaderShow () {
+    submitButtonTrigger.addClass(buttonClass);
+  }
+  function loaderHide () {
+    submitButtonTrigger.removeClass(buttonClass);
+  }
+  
+  submitButtonTrigger.click(function(){
+    submitButtonTarget.click();
+    var counter = 0;
     requiredFields.each(function() {
-      if (this.checkValidity() == false ) {
-        submitButton.removeClass(buttonClass);
-        submitButton.attr("disabled", false);
-        submitTarget.attr("disabled", false);
-      } else {
-        submitButton.addClass(buttonClass);
+      if (this.checkValidity() == false) {
+        counter++;
+      }
+    })
+    if (counter == 0) {
+        loaderShow();
         inputPageUrl.val(window.location);
-        inputFormName.val(form.attr("data-name")); 
-        // Set subject line
+        inputFormName.val(form.attr("data-name"));
+        inputEmailFrom.val(emailFrom);
         if (inputName2) {
           var subjectVar1 = form.find("[data-name='" + inputName1 + "']").val();
           var subjectVar2 = form.find("[data-name='" + inputName2 + "']").val();
@@ -41,14 +50,11 @@ $('form[action^="https://submit-form.com"]').each(function (i, el) {
         } else {
           inputSubject.val(subjectLine);
         }
-        // Set email from
-        inputEmailFrom.val(emailFrom);
         setTimeout(function () {
-          submitButton.attr("disabled", true);
-          submitTarget.attr("disabled", true);
-        }, 1000);
+          submitButtonTrigger.attr("disabled", true);
+          submitButtonTarget.attr("disabled", true);
+        }, 1200);
       }
-    });
   });
 
   form.submit(function (e) {
@@ -73,23 +79,23 @@ $('form[action^="https://submit-form.com"]').each(function (i, el) {
             parent.children("form").css("display", "none");
             if (redirectUrl) {
               window.location.href = redirectUrl;
-              submitButton.removeClass(buttonClass);
+              loaderHide();
             } else {
               parent.children(".w-form-done").css("display", "block");
-              submitButton.removeClass(buttonClass);
+              loaderHide();
             }
           },
           error: function () {
             var parent = $(form.parent());
             parent.find(".w-form-fail").css("display", "block");
-            submitButton.removeClass(buttonClass);
+            loaderHide();
           },
         });
       })
       .catch(function () {
         var parent = $(form.parent());
         parent.find(".w-form-fail").css("display", "block");
-        submitButton.removeClass(buttonClass);
+        loaderHide();
       });
     }); 
   });
