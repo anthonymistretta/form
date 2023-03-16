@@ -1,7 +1,6 @@
 
 $("select[ec-dropdown='country']").each(function (i, el) {
   var selectCountry = $(el);
-  console.log(selectCountry);
   arrCountry = [
     'United States',
     'China',
@@ -268,7 +267,6 @@ $("select[ec-dropdown='country']").each(function (i, el) {
 
 $("select[ec-dropdown='state']").each(function (i, el) {
   var selectState = $(el);
-  console.log(selectState);
   arrState = [
     'Alabama',
     'Alaska',
