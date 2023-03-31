@@ -258,11 +258,11 @@ $("select[ec-dropdown='country']").each(function (i, el) {
     'Zimbabwe',
     'Åland Islands',
   ];
-  var option = '';
+  var optionCountry = '';
   for (var i=0;i<arrCountry.length;i++){
-    option += '<option value="'+ arrCountry[i] + '">' + arrCountry[i] + '</option>';
+    optionCountry += '<option value="'+ arrCountry[i] + '">' + arrCountry[i] + '</option>';
   }
-  selectCountry.append(option);
+  selectCountry.append(optionCountry);
 });
 
 $("select[ec-dropdown='state']").each(function (i, el) {
@@ -333,9 +333,9 @@ $("select[ec-dropdown='state']").each(function (i, el) {
     'Saskatechewan',
     'Yukon Territories',
   ];
-  var option = '';
+  var optionState = '';
   for (var i=0;i<arrState.length;i++){
-    option += '<option value="'+ arrState[i] + '">' + arrState[i] + '</option>';
+    optionState += '<option value="'+ arrState[i] + '">' + arrState[i] + '</option>';
   }
-  selectState.append(option);
+  selectState.append(optionState);
 });
