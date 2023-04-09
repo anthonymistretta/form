@@ -1,6 +1,5 @@
-
 $('form[action^="https://submit-form.com"]').each(function (i, el) {
-  // Basic Setup
+  // -Basic Setup
   var form = $(el);
   var submitButtonTarget = form.find("[type=submit]");
   var submitButtonTrigger = form.find("a");
@@ -27,6 +26,15 @@ $('form[action^="https://submit-form.com"]').each(function (i, el) {
     submitButtonTrigger.removeClass(buttonClass);
   }
   
+  $(document).ready(function() {
+    $(window).keydown(function(event){
+      if(event.keyCode == 13) {
+        event.preventDefault();
+        return false;
+      }
+    });
+  });
+
   submitButtonTrigger.click(function(){
     submitButtonTarget.click();
     var counter = 0;
@@ -51,9 +59,9 @@ $('form[action^="https://submit-form.com"]').each(function (i, el) {
           inputSubject.val(subjectLine);
         }
         setTimeout(function () {
-          submitButtonTrigger.attr("disabled", true);
-          submitButtonTarget.attr("disabled", true);
-        }, 1200);
+          submitButtonTrigger.attr("disabled", true).css('cursor', 'not-allowed');
+          submitButtonTarget.attr("disabled", true).css('cursor', 'not-allowed');
+        }, 100);
       }
   });
 
