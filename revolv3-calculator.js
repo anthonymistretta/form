@@ -21,12 +21,15 @@ $(document).ready(function() {
     $('#revenue-input').val(revenue);
     $('#transactions-input').val(transactions);
     $('#approvals-input').val(approvals);
+    $('#revolv3-cost-input').val(revolv3TotalCost);
     $('#gated-modal').show();
     return false;
   });
 
   $('#lead-submit').click(function(){
     var email = $('#Company-Email').val();
+    var domain = email.substring(email.indexOf('@') + 1);
+    $('#domain-input').val(domain);
     if(isEmail(email)==false){
       return false;
     }
